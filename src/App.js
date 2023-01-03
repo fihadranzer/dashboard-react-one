@@ -3,7 +3,7 @@ import { FiSettings } from "react-icons/fi";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { Navbar, Sidebar } from "./components";
+import { Navbar, Sidebar, ThemeSettings, Footer } from "./components";
 
 import "./App.css";
 import { useStateContext } from "./contexts/ContextProvider";
@@ -27,9 +27,9 @@ import {
 } from "./pages";
 
 const App = () => {
-  const { activeMenu } = useStateContext();
+  const { activeMenu, currentColor, themeSettings, setThemeSettings, currentMode, } = useStateContext();
   return (
-    <div>
+    <div className={currentMode === 'Dark' ? 'dark' : ''}>
       <BrowserRouter>
         <div className="flex relative dark:bg-main-dark-bg">
           <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
@@ -37,7 +37,9 @@ const App = () => {
               <button
                 type="button"
                 className="text-3xl p-3 hover: drop-shadow-xl hover:bg-light-gray text-white"
-                style={{ background: "blue", borderRadius: "50%" }}
+                onClick={()=>setThemeSettings(true)}
+                style={{ background: currentColor, borderRadius: "50%" }}
+
               >
                 <FiSettings />
               </button>
@@ -55,9 +57,8 @@ const App = () => {
           )}
 
           <div
-            className={`dark:bg-main-bg bg-main-bg min-h-screen  w-full ${
-              activeMenu ? "md:ml-72" : "flex-2"
-            }`}
+            className={`dark:bg-main-dark-bg bg-main-bg min-h-screen  w-full
+            ${activeMenu ? "md:ml-72" : "flex-2"}`}
           >
             <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg w-full navbar">
               {" "}
@@ -65,6 +66,7 @@ const App = () => {
             </div>
 
             <div>
+              {themeSettings && <ThemeSettings/>}
               <Routes>
                 {/* Dashboard */}
                 <Route path="/" element={<Ecommerce />} />
@@ -76,9 +78,9 @@ const App = () => {
                 <Route path="/customers" element={<Customers />} />
 
                 {/*  Apps */}
+                <Route path="/calender" element={<Calendar />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route path="/editor" element={<Editor />} />
-                <Route path="/calender" element={<Calendar />} />
                 <Route path="/color-picker" element={<ColorPicker />} />
 
                 {/* Charts  */}
@@ -92,6 +94,7 @@ const App = () => {
                 <Route path="/stacked" element={<Stacked />} />
               </Routes>
             </div>
+           <Footer/>
           </div>
         </div>
       </BrowserRouter>
